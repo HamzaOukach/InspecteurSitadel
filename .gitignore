@@ -1,0 +1,17 @@
+# Fichiers nationaux Sitadel : 1,3 Go, au delà de la limite de GitHub.
+# À retélécharger (voir README) ; les extraits filtrés du 78 restent versionnés.
+data/sitadel_logements.csv
+data/sitadel_locaux.csv
+
+# Python
+__pycache__/
+*.pyc
+
+# Éditeurs et système
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Carnet de bord du projet pour l'assistant de code : reste en local
+CLAUDE.md

@@ -1,0 +1,214 @@
+code;libelle;source
+2110;Indivision entre personnes physiques;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2110
+2120;Indivision avec personne morale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2120
+2210;Société créée de fait entre personnes physiques;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2210
+2220;Société créée de fait avec personne morale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2220
+2310;Société en participation entre personnes physiques;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2310
+2320;Société en participation avec personne morale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2320
+2385;Société en participation de professions libérales;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2385
+2700;Paroisse hors zone concordataire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2700
+2900;Autre groupement de droit privé non doté de la personnalité morale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/2900
+3120;Société commerciale étrangère immatriculée au RCS;https://api.insee.fr/metadonnees/V1/codes/cj/n3/3120
+3205;Organisation internationale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/3205
+3210;État, collectivité ou établissement public étranger;https://api.insee.fr/metadonnees/V1/codes/cj/n3/3210
+3220;Société étrangère non immatriculée au RCS;https://api.insee.fr/metadonnees/V1/codes/cj/n3/3220
+3290;Autre personne morale de droit étranger;https://api.insee.fr/metadonnees/V1/codes/cj/n3/3290
+4100;;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4100
+4110;Établissement public national à caractère industriel ou commercial doté d'un comptable public;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4110
+4120;Établissement public national à caractère industriel ou commercial non doté d'un comptable public;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4120
+4130;Exploitant public;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4130
+4140;Établissement public local à caractère industriel ou commercial;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4140
+4150;Régie d'une collectivité locale à caractère industriel ou commercial;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4150
+4160;Institution Banque de France;https://api.insee.fr/metadonnees/V1/codes/cj/n3/4160
+5192;Société coopérative de banque populaire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5192
+5193;Caisse de crédit maritime mutuel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5193
+5194;Caisse (fédérale) de crédit mutuel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5194
+5195;Association coopérative inscrite (droit local Alsace Moselle);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5195
+5196;Caisse d'épargne et de prévoyance à forme coopérative;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5196
+5202;Société en nom collectif;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5202
+5203;Société en nom collectif coopérative;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5203
+5306;Société en commandite simple;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5306
+5307;Société en commandite simple coopérative;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5307
+5308;Société en commandite par actions;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5308
+5385;Société d'exercice libéral en commandite par actions;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5385
+5400;;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5400
+5410;SARL nationale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5410
+5415;SARL d'économie mixte;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5415
+5426;SARL immobilière de gestion;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5426
+5432;SARL d'intérêt collectif agricole (SICA);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5432
+5442;SARL d'attribution;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5442
+5451;SARL coopérative de consommation;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5451
+5453;SARL coopérative artisanale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5453
+5458;SARL coopérative de production (SCOP);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5458
+5460;Autre SARL coopérative;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5460
+5470;Société de Participations Financières de Profession Libérale Société à responsabilité limitée (SPFPL SARL);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5470
+5485;Société d'exercice libéral à responsabilité limitée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5485
+5499;Société à responsabilité limitée (sans autre indication);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5499
+5505;SA à participation ouvrière à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5505
+5510;SA nationale à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5510
+5515;SA d'économie mixte à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5515
+5520;Fonds à forme sociétale à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5520
+5522;SA immobilière pour le commerce et l'industrie (SICOMI) à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5522
+5525;SA immobilière d'investissement à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5525
+5530;SA d'aménagement foncier et d'équipement rural (SAFER) à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5530
+5532;SA d'intérêt collectif agricole (SICA) à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5532
+5543;SA coopérative de construction à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5543
+5546;SA de HLM à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5546
+5547;SA coopérative de production de HLM à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5547
+5551;SA coopérative de consommation à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5551
+5552;SA coopérative de commerçants-détaillants à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5552
+5553;SA coopérative artisanale à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5553
+5554;SA coopérative (d'intérêt) maritime à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5554
+5555;SA coopérative de transport à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5555
+5558;SA coopérative de production (SCOP) à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5558
+5559;SA union de sociétés coopératives à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5559
+5560;Autre SA coopérative à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5560
+5570;Société de Participations Financières de Profession Libérale Société anonyme à conseil d'administration (SPFPL SA à conseil d'administration);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5570
+5585;Société d'exercice libéral à forme anonyme à conseil d'administration;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5585
+5599;SA à conseil d'administration (s.a.i.);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5599
+5610;SA nationale à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5610
+5615;SA d'économie mixte à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5615
+5632;SA d'intérêt collectif agricole (SICA);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5632
+5646;SA de HLM à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5646
+5647;Société coopérative de production de HLM anonyme à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5647
+5651;SA coopérative de consommation à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5651
+5658;SA coopérative de production (SCOP) à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5658
+5659;SA union de sociétés coopératives à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5659
+5660;Autre SA coopérative à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5660
+5685;Société d'exercice libéral à forme anonyme à directoire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5685
+5699;SA à directoire (s.a.i.);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5699
+5710;SAS, société par actions simplifiée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5710
+5770;Société de Participations Financières de Profession Libérale Société par actions simplifiée (SPFPL SAS);https://api.insee.fr/metadonnees/V1/codes/cj/n3/5770
+5785;Société d'exercice libéral par action simplifiée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5785
+5800;Société européenne;https://api.insee.fr/metadonnees/V1/codes/cj/n3/5800
+6100;Caisse d'Épargne et de Prévoyance;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6100
+6210;Groupement européen d'intérêt économique (GEIE);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6210
+6220;Groupement d'intérêt économique (GIE);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6220
+6300;;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6300
+6316;Coopérative d'utilisation de matériel agricole en commun (CUMA);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6316
+6317;Société coopérative agricole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6317
+6318;Union de sociétés coopératives agricoles;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6318
+6411;Société d'assurance à forme mutuelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6411
+6500;;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6500
+6511;Sociétés Interprofessionnelles de Soins Ambulatoires ;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6511
+6521;Société civile de placement collectif immobilier (SCPI);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6521
+6532;Société civile d'intérêt collectif agricole (SICA);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6532
+6533;Groupement agricole d'exploitation en commun (GAEC);https://api.insee.fr/metadonnees/V1/codes/cj/n3/6533
+6534;Groupement foncier agricole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6534
+6535;Groupement agricole foncier;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6535
+6536;Groupement forestier;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6536
+6537;Groupement pastoral;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6537
+6538;Groupement foncier et rural;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6538
+6539;Société civile foncière;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6539
+6540;Société civile immobilière;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6540
+6541;Société civile immobilière de construction-vente;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6541
+6542;Société civile d'attribution;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6542
+6543;Société civile coopérative de construction;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6543
+6544;Société civile immobilière d' accession progressive à la propriété;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6544
+6560;Autre société civile coopérative;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6560
+6561;SCP d'avocats;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6561
+6564;SCP d'huissiers;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6564
+6565;SCP de notaires;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6565
+6567;SCP de greffiers de tribunal de commerce;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6567
+6568;SCP de conseils juridiques;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6568
+6571;SCP de médecins;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6571
+6572;SCP de dentistes;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6572
+6573;SCP d'infirmiers;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6573
+6574;SCP de masseurs-kinésithérapeutes;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6574
+6576;SCP de vétérinaires;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6576
+6577;SCP de géomètres experts;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6577
+6578;SCP d'architectes;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6578
+6585;Autre société civile professionnelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6585
+6589;Société civile de moyens;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6589
+6595;Caisse locale de crédit mutuel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6595
+6596;Caisse de crédit agricole mutuel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6596
+6597;Société civile d'exploitation agricole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6597
+6598;Exploitation agricole à responsabilité limitée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6598
+6599;Autre société civile;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6599
+6901;Autre personne de droit privé inscrite au registre du commerce et des sociétés;https://api.insee.fr/metadonnees/V1/codes/cj/n3/6901
+7111;Autorité constitutionnelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7111
+7112;Autorité administrative ou publique indépendante;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7112
+7113;Ministère;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7113
+7120;Service central d'un ministère;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7120
+7150;Service du ministère de la Défense;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7150
+7160;Service déconcentré à compétence nationale d'un ministère (hors Défense);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7160
+7171;Service déconcentré de l'État à compétence (inter) régionale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7171
+7172;Service déconcentré de l'État à compétence (inter) départementale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7172
+7179;(Autre) Service déconcentré de l'État à compétence territoriale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7179
+7210;Commune et commune nouvelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7210
+7220;Département;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7220
+7225;Collectivité et territoire d'Outre Mer;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7225
+7229;(Autre) Collectivité territoriale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7229
+7230;Région;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7230
+7312;Commune associée et commune déléguée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7312
+7313;Section de commune;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7313
+7321;Association syndicale autorisée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7321
+7322;Association foncière urbaine;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7322
+7323;Association foncière de remembrement;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7323
+7331;Établissement public local d'enseignement;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7331
+7340;Pôle métropolitain;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7340
+7343;Communauté urbaine;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7343
+7344;Métropole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7344
+7345;Syndicat intercommunal à vocation multiple (SIVOM);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7345
+7346;Communauté de communes;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7346
+7348;Communauté d'agglomération;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7348
+7349;Autre établissement public local de coopération non spécialisé ou entente;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7349
+7351;Institution interdépartementale ou entente;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7351
+7353;Syndicat intercommunal à vocation unique (SIVU);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7353
+7354;Syndicat mixte fermé;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7354
+7355;Syndicat mixte ouvert;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7355
+7356;Commission syndicale pour la gestion des biens indivis des communes;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7356
+7357;Pôle d'équilibre territorial et rural (PETR);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7357
+7361;Centre communal d'action sociale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7361
+7362;Caisse des écoles;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7362
+7363;Caisse de crédit municipal;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7363
+7364;Établissement d'hospitalisation;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7364
+7365;Syndicat inter hospitalier;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7365
+7366;Établissement public local social et médico-social;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7366
+7367;Centre Intercommunal d'action sociale (CIAS);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7367
+7371;Office public d'habitation à loyer modéré (OPHLM);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7371
+7372;Service départemental d'incendie et de secours (SDIS);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7372
+7373;Établissement public local culturel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7373
+7378;Régie d'une collectivité locale à caractère administratif;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7378
+7379;(Autre) Établissement public administratif local;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7379
+7381;Organisme consulaire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7381
+7382;Établissement public national ayant fonction d'administration centrale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7382
+7383;Établissement public national à caractère scientifique culturel et professionnel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7383
+7384;Autre établissement public national d'enseignement;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7384
+7385;Autre établissement public national administratif à compétence territoriale limitée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7385
+7389;Établissement public national à caractère administratif;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7389
+7410;Groupement d'intérêt public (GIP);https://api.insee.fr/metadonnees/V1/codes/cj/n3/7410
+7430;Établissement public des cultes d'Alsace-Lorraine;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7430
+7450;Etablissement public administratif, cercle et foyer dans les armées;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7450
+7470;Groupement de coopération sanitaire à gestion publique;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7470
+7490;Autre personne morale de droit administratif;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7490
+7510;;https://api.insee.fr/metadonnees/V1/codes/cj/n3/7510
+8110;Régime général de la Sécurité Sociale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8110
+8120;Régime spécial de Sécurité Sociale;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8120
+8130;Institution de retraite complémentaire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8130
+8140;Mutualité sociale agricole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8140
+8170;Régime d'assurance chômage;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8170
+8210;Mutuelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8210
+8250;Assurance mutuelle agricole;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8250
+8290;Autre organisme mutualiste;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8290
+8310;Comité social économique d'entreprise;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8310
+8311;Comité social économique d'établissement;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8311
+8410;Syndicat de salariés;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8410
+8420;Syndicat patronal;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8420
+8450;Ordre professionnel ou assimilé;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8450
+8470;Centre technique industriel ou comité professionnel du développement économique;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8470
+8490;Autre organisme professionnel;https://api.insee.fr/metadonnees/V1/codes/cj/n3/8490
+9110;Syndicat de copropriété;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9110
+9150;Association syndicale libre;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9150
+9210;Association non déclarée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9210
+9220;Association déclarée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9220
+9221;Association déclarée d'insertion par l'économique;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9221
+9222;Association intermédiaire;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9222
+9223;Groupement d'employeurs;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9223
+9224;Association d'avocats à responsabilité professionnelle individuelle;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9224
+9230;Association déclarée, reconnue d'utilité publique;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9230
+9240;Congrégation;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9240
+9260;Association de droit local (Bas-Rhin, Haut-Rhin et Moselle);https://api.insee.fr/metadonnees/V1/codes/cj/n3/9260
+9300;Fondation;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9300
+9900;Autre personne morale de droit privé;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9900
+9970;Groupement de coopération sanitaire à gestion privée;https://api.insee.fr/metadonnees/V1/codes/cj/n3/9970

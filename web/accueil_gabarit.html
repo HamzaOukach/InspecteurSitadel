@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspecteur Sitadel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fond: #efe7da; --fond2: #e6dccb; --carte: #fbf8f2; --texte: #3a2e24; --doux: #7b6b5a;
+    --bord: rgba(120, 96, 70, .18); --accent: #b0532c; --survol: rgba(160, 120, 80, .10);
+    --ombre: 0 10px 40px -12px rgba(70, 48, 28, .28), 0 2px 6px rgba(70, 48, 28, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fond: #1c1814; --fond2: #231d18; --carte: #26201b; --texte: #efe5d7; --doux: #a8977f;
+      --bord: rgba(230, 200, 160, .14); --accent: #de8a5f; --survol: rgba(230, 200, 160, .08);
+      --ombre: 0 10px 40px -12px rgba(0, 0, 0, .6), 0 2px 6px rgba(0, 0, 0, .3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --fond: #1c1814; --fond2: #231d18; --carte: #26201b; --texte: #efe5d7; --doux: #a8977f;
+    --bord: rgba(230, 200, 160, .14); --accent: #de8a5f; --survol: rgba(230, 200, 160, .08);
+    --ombre: 0 10px 40px -12px rgba(0, 0, 0, .6), 0 2px 6px rgba(0, 0, 0, .3);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--texte);
+    font: 16px/1.6 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: radial-gradient(ellipse at 30% 20%, var(--fond) 0%, var(--fond2) 100%) fixed;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 72px 16px 48px; }
+  h1 { font-family: "Fraunces", Georgia, serif; font-weight: 650; font-size: clamp(34px, 6vw, 48px); line-height: 1.1; margin: 0 0 16px; letter-spacing: -.015em; }
+  h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--doux); margin: 48px 0 14px; }
+  .chapeau { font-size: 19px; color: var(--doux); margin: 0 0 8px; max-width: 620px; }
+  p { margin: 0 0 12px; }
+  .deps { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .dep {
+    display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 20px; text-decoration: none;
+    color: var(--texte); background: var(--carte); border: 1px solid var(--bord); box-shadow: var(--ombre);
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1), border-color .25s;
+  }
+  .dep:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .num { font-family: "Fraunces", Georgia, serif; font-size: 36px; font-weight: 650; color: var(--accent); line-height: 1; }
+  .dep small { color: var(--doux); font-size: 13px; }
+  ol { padding-left: 22px; margin: 0; }
+  li { margin-bottom: 6px; }
+  a { color: var(--accent); }
+  .pied { margin-top: 56px; font-size: 13px; color: var(--doux); border-top: 1px solid var(--bord); padding-top: 18px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Inspecteur Sitadel</h1>
+  <p class="chapeau">Qui dépose les permis de construire d'un département, et lesquels de ces porteurs de projet ressemblent aux clients d'une direction immobilière externalisée pour l'économie sociale et solidaire.</p>
+
+  <h2>Ouvrir la démo</h2>
+  <div class="deps">
+<!--__DEPARTEMENTS__-->
+  </div>
+
+  <h2>Ce que fait l'outil</h2>
+  <ol>
+    <li>Il garde, dans la base nationale Sitadel, les permis de construire du département déposés par des personnes morales.</li>
+    <li>Il classe chaque demandeur dans une famille (bailleur social, ESS médico-sociale, autre ESS, collectivité, promoteur, SCI...) avec des règles lisibles sur sa forme juridique, son activité et des indicateurs officiels de Sirène.</li>
+    <li>Il calcule des signaux de prospection et un score de priorité pour les familles cibles, chacun expliqué.</li>
+    <li>Chaque structure et chaque permis renvoient à leur source publique.</li>
+  </ol>
+
+  <h2>Lire la démo</h2>
+  <p><b>Réseau</b> : chaque rond coloré est une structure, reliée aux communes où elle a obtenu un permis. <b>Hiérarchie</b> : département, familles, structures, puis leurs permis. Cliquez sur un élément pour ouvrir sa fiche et ses sources.</p>
+
+  <p class="pied">Sources : base Sitadel du SDES (data.gouv.fr), répertoire Sirène via l'API Recherche d'entreprises, nomenclatures de l'INSEE. Cas pratique réalisé pour un stage « IA agentique et développement web ».</p>
+</main>
+</body>
+</html>

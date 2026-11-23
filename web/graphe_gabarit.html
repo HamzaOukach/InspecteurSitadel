@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspecteur Sitadel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root {
+    --fond: #efe7da; --fond2: #e6dccb; --carte: rgba(251, 248, 242, .86); --plein: #fbf8f2;
+    --texte: #3a2e24; --doux: #7b6b5a; --bord: rgba(120, 96, 70, .16); --survol: rgba(160, 120, 80, .10);
+    --accent: #b0532c; --commune: #d6c6ad; --commune-bord: #c2ae90; --lien: #b9a68c;
+    --ombre: 0 10px 40px -12px rgba(70, 48, 28, .28), 0 2px 6px rgba(70, 48, 28, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fond: #1c1814; --fond2: #231d18; --carte: rgba(38, 32, 27, .86); --plein: #26201b;
+      --texte: #efe5d7; --doux: #a8977f; --bord: rgba(230, 200, 160, .12); --survol: rgba(230, 200, 160, .08);
+      --accent: #de8a5f; --commune: #5c4f42; --commune-bord: #74644f; --lien: #6b5c4b;
+      --ombre: 0 10px 40px -12px rgba(0, 0, 0, .6), 0 2px 6px rgba(0, 0, 0, .3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --fond: #1c1814; --fond2: #231d18; --carte: rgba(38, 32, 27, .86); --plein: #26201b;
+    --texte: #efe5d7; --doux: #a8977f; --bord: rgba(230, 200, 160, .12); --survol: rgba(230, 200, 160, .08);
+    --accent: #de8a5f; --commune: #5c4f42; --commune-bord: #74644f; --lien: #6b5c4b;
+    --ombre: 0 10px 40px -12px rgba(0, 0, 0, .6), 0 2px 6px rgba(0, 0, 0, .3);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    color: var(--texte); font: 14px/1.5 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: radial-gradient(ellipse at 30% 20%, var(--fond) 0%, var(--fond2) 100%) fixed; overflow: hidden;
+  }
+  .toile { position: fixed; inset: 0; transition: opacity .45s ease; }
+  .toile.cachee { opacity: 0; pointer-events: none; }
+  /* hiérarchie : l'arbre sortant glisse d'un côté en s'effaçant, le suivant arrive de l'autre */
+  #hierarchie { transition: opacity .32s ease, transform .55s cubic-bezier(.22, 1, .36, 1); }
+  #hierarchie.vers-gauche { opacity: 0; transform: translateX(-48px) scale(.985); }
+  #hierarchie.vers-droite { opacity: 0; transform: translateX(48px) scale(.985); }
+  #hierarchie.sans-transition { transition: none; }
+
+  .carte {
+    position: fixed; background: var(--carte); backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2); border: 1px solid var(--bord);
+    border-radius: 22px; box-shadow: var(--ombre); overflow-y: auto; scrollbar-width: thin;
+  }
+  #filtres { top: 16px; left: 16px; bottom: 16px; width: 300px; padding: 22px 20px; }
+  #fiche {
+    top: 16px; right: 16px; bottom: 16px; width: 380px; padding: 22px 22px 26px;
+    transform: translateX(calc(100% + 32px)); opacity: 0;
+    transition: transform .55s cubic-bezier(.22, 1, .36, 1), opacity .4s ease;
+  }
+  #fiche.ouverte { transform: none; opacity: 1; }
+  .pilule {
+    position: fixed; left: calc(50% + 158px); transform: translateX(-50%); padding: 7px 16px; border-radius: 999px;
+    font-size: 12px; color: var(--doux); background: var(--carte); backdrop-filter: blur(10px);
+    border: 1px solid var(--bord); box-shadow: var(--ombre); white-space: nowrap;
+  }
+  #etat { bottom: 18px; pointer-events: none; }
+  #modes { top: 18px; padding: 4px; display: flex; gap: 2px; }
+  #modes button { border: none; background: transparent; padding: 6px 16px; font-size: 13px; color: var(--doux); }
+  #modes button.actif { background: var(--plein); color: var(--texte); font-weight: 600; box-shadow: 0 1px 4px rgba(70,48,28,.15); }
+  #modes button:hover { transform: none; }
+  #ariane { top: 66px; font-size: 13px; color: var(--texte); display: none; }
+  #ariane.visible { display: block; }
+  #ariane button { all: unset; cursor: pointer; color: var(--accent); }
+  #ariane button:hover { text-decoration: underline; }
+  #ariane .sep { color: var(--doux); margin: 0 8px; }
+
+  h1, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 650; letter-spacing: -.01em; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--doux); margin: 24px 0 10px; }
+  h3 { font-size: 21px; line-height: 1.2; margin: 0 0 10px; overflow-wrap: anywhere; }
+  .meta { color: var(--doux); font-size: 12.5px; }
+
+  label.ligne {
+    display: flex; align-items: center; gap: 10px; padding: 6px 10px; margin: 0 -10px; border-radius: 12px;
+    cursor: pointer; transition: background .25s ease;
+  }
+  label.ligne:hover { background: var(--survol); }
+  label.ligne .n { margin-left: auto; color: var(--doux); font-variant-numeric: tabular-nums; font-size: 12px; }
+  label.ligne input { accent-color: var(--accent); margin: 0; }
+  .pastille { width: 11px; height: 11px; border-radius: 50%; flex: none; box-shadow: 0 0 0 3px var(--survol); }
+  .cible { font-weight: 600; }
+
+  input[type=search] {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--bord); border-radius: 14px;
+    background: var(--plein); color: var(--texte); font: inherit; outline: none; transition: border-color .25s, box-shadow .25s;
+  }
+  input[type=search]:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--survol); }
+
+  .boutons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  button {
+    font: inherit; font-size: 12.5px; padding: 6px 13px; border: 1px solid var(--bord); border-radius: 999px;
+    background: var(--plein); color: var(--texte); cursor: pointer; transition: background .25s, transform .2s;
+  }
+  button:hover { background: var(--survol); transform: translateY(-1px); }
+  .fermer {
+    position: sticky; top: 0; float: right; width: 32px; height: 32px; padding: 0; font-size: 18px; line-height: 1;
+    margin: -6px -8px 0 8px; z-index: 1;
+  }
+  .aide { font-size: 12px; color: var(--doux); margin: 0 0 6px 26px; line-height: 1.4; }
+  .fragile { color: var(--accent); font-size: 10.5px; font-weight: 600; letter-spacing: .03em; }
+
+  .puce {
+    display: inline-block; font-size: 11.5px; padding: 3px 10px; border-radius: 999px; margin: 3px 4px 3px 0;
+    background: var(--survol); border: 1px solid var(--bord);
+  }
+  .famille { color: #fffaf3; border: none; font-weight: 600; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 16px 0; font-size: 13px; }
+  dt { color: var(--doux); } dd { margin: 0; overflow-wrap: anywhere; }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .note {
+    font-size: 12.5px; color: var(--doux); background: var(--survol); border-radius: 14px; padding: 10px 13px;
+    margin-top: 10px; line-height: 1.45;
+  }
+  .permis {
+    padding: 11px 13px; margin: 8px 0; border-radius: 14px; background: var(--plein); border: 1px solid var(--bord);
+    font-size: 13px; transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .permis:hover { transform: translateX(-3px); box-shadow: var(--ombre); }
+  .permis .titre { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; }
+  #priorites { list-style: none; padding: 0; margin: 0; }
+  #priorites li {
+    display: flex; align-items: center; gap: 10px; padding: 6px 10px; margin: 0 -10px; border-radius: 12px;
+    cursor: pointer; transition: background .25s ease; font-size: 13px;
+  }
+  #priorites li:hover { background: var(--survol); }
+  #priorites .nom { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .score {
+    flex: none; min-width: 30px; text-align: center; font-weight: 600; font-size: 12px; padding: 2px 7px;
+    border-radius: 999px; color: #fffaf3; font-variant-numeric: tabular-nums;
+  }
+  details.bareme { margin-top: 8px; font-size: 12px; color: var(--doux); }
+  details.bareme summary { cursor: pointer; color: var(--accent); }
+  details.bareme ul, .raisons { padding-left: 0; list-style: none; margin: 6px 0 0; }
+  details.bareme li, .raisons li { display: flex; gap: 8px; padding: 3px 0; line-height: 1.35; }
+  .pts { flex: none; width: 26px; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--texte); }
+  .bloc-score { display: flex; align-items: baseline; gap: 8px; margin: 14px 0 2px; }
+  .bloc-score .grand { font-family: "Fraunces", Georgia, serif; font-size: 30px; font-weight: 650; color: var(--accent); }
+  .lienstruct { all: unset; cursor: pointer; color: var(--accent); font-size: 13px; padding: 3px 0; display: inline; }
+  .lienstruct:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .toile { position: relative; height: 70vh; }
+    .toile.cachee { display: none; }
+    .carte, .pilule { position: relative; inset: auto; width: auto; margin: 12px; transform: none; left: auto; top: auto; bottom: auto; }
+    #fiche { opacity: 1; transform: none; }
+    #fiche:not(.ouverte) { display: none; }
+    #modes { display: inline-flex; }
+  }
+</style>
+</head>
+<body>
+<div id="reseau" class="toile"></div>
+<div id="hierarchie" class="toile cachee"></div>
+
+<div id="modes" class="pilule" role="tablist">
+  <button id="btnReseau" class="actif" role="tab">Réseau</button>
+  <button id="btnHierarchie" role="tab">Hiérarchie</button>
+</div>
+<nav id="ariane" class="pilule" aria-label="Niveau de la hiérarchie"></nav>
+
+<aside id="filtres" class="carte">
+  <h1>Inspecteur Sitadel</h1>
+  <div class="meta" id="sousTitre"></div>
+
+  <h2>Rechercher une structure</h2>
+  <input type="search" id="recherche" list="noms" placeholder="Nom ou SIREN">
+  <datalist id="noms"></datalist>
+
+  <h2>Familles de demandeurs</h2>
+  <div id="familles"></div>
+  <div class="boutons">
+    <button id="btnCibles">Cibles Buddimm</button>
+    <button id="btnTout">Tout afficher</button>
+  </div>
+  <div class="aide" style="margin:10px 0 0">En gras, les familles cibles. En vue réseau, les SCI et les entreprises ajoutent des milliers de nœuds et ralentissent l'affichage.</div>
+
+  <h2>Priorités de prospection</h2>
+  <div class="aide" style="margin:0 0 8px">Les 15 structures cibles les mieux notées. Le score additionne des points explicites ; ce n'est pas une prédiction.</div>
+  <ol id="priorites"></ol>
+  <details class="bareme"><summary>Voir le barème</summary><ul id="bareme"></ul></details>
+
+  <h2>Signaux de prospection</h2>
+  <div id="signaux"></div>
+
+  <h2>Lire le graphe</h2>
+  <div class="note">
+    <b>Réseau</b> : un rond coloré est une structure, un rond sable une commune. Un trait relie une structure aux
+    communes où elle a obtenu un permis ; plus il est épais, plus il y a de permis.<br><br>
+    <b>Hiérarchie</b> : de gauche à droite, le département, les familles, les structures, puis leurs communes et
+    leurs permis. Cliquez sur une case pour descendre d'un niveau, sur le fil en haut pour remonter.
+  </div>
+  <div class="note" id="sources"></div>
+</aside>
+
+<section id="fiche" class="carte" aria-live="polite"></section>
+<div id="etat" class="pilule"></div>
+
+<script>
+const D = /*__DONNEES__*/null;
+
+// Palette terreuse : chaque famille garde une teinte distincte, lisible sur fond clair et sombre.
+const COULEURS = {
+  "bailleur social": "#4f7383",                      // bleu ardoise
+  "ESS médico-sociale": "#c0592f",                   // terre cuite
+  "ESS autre": "#8c5e7e",                            // prune
+  "collectivité ou établissement public": "#748f62", // sauge
+  "entreprise médico-sociale privée": "#d39232",     // ocre
+  "promoteur": "#8a6a45",                            // terre d'ombre
+  "SCI": "#9a9142",                                  // olive
+  "entreprise autre": "#9c8f82",                     // taupe
+  "non déterminé": "#c2b6a6",                        // lin
+};
+const ORDRE = Object.keys(COULEURS);
+const MAX_STRUCTURES_HIERARCHIE = 60;
+const SIGNAUX = {
+  tous: { titre: "Aucun filtre", aide: "" },
+  recurrent: { titre: "Construit régulièrement",
+    aide: `Au moins ${D.parametres.seuil_recurrent} permis dans le département.` },
+  nouvel_entrant: { titre: "Nouvel entrant",
+    aide: `Premier permis en France depuis moins de ${D.parametres.mois_recent} mois, 2 permis au plus. Sans doute sans équipe immobilière.` },
+  projet_medico: { titre: "Projet médico-social",
+    aide: "Résidence personnes âgées, handicapés, sociale, ou local de santé ou d'action sociale." },
+  en_attente: { titre: "Permis en attente", fragile: true,
+    aide: `Autorisé il y a ${D.parametres.mois_attente / 12} à ${D.parametres.mois_peremption / 12} ans, sans ouverture de chantier connue : le permis est encore valable mais le projet n'a pas démarré. Environ 15 % des ouvertures ne remontent jamais.` },
+  logements_sociaux: { titre: "Promoteur avec logements sociaux", fragile: true,
+    aide: "Indice d'une vente à un bailleur social (achat sur plan, VEFA). Colonne mal renseignée selon le SDES." },
+};
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const court = (s, n = 26) => s.length > n ? s.slice(0, n - 1) + "…" : s;
+const fmtDate = s => s ? s.split("-").reverse().join("/") : "";
+const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? "s" : ""}`;
+const alpha = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const hexVar = v => { // convertit une couleur CSS (#hex ou rgb) en #hex pour vis-network
+  const c = css(v); if (c.startsWith("#")) return c;
+  const m = c.match(/\d+/g); return "#" + m.slice(0, 3).map(x => (+x).toString(16).padStart(2, "0")).join("");
+};
+
+// ---------- état
+const familles = new Set(D.familles_cibles);
+let signal = "tous";
+let selection = null;
+let mode = "reseau";
+let chemin = [];  // hiérarchie : [] vue générale, [famille], [famille, siren]
+
+// ---------- index
+const parId = new Map(D.noeuds.map(n => [n.id, n]));
+const voisins = new Map();
+for (const l of D.liens) {
+  if (!voisins.has(l.from)) voisins.set(l.from, []);
+  if (!voisins.has(l.to)) voisins.set(l.to, []);
+  voisins.get(l.from).push(l); voisins.get(l.to).push(l);
+}
+const structures = D.noeuds.filter(n => n.type === "structure");
+const parSiren = new Map(structures.map(n => [n.siren, n]));
+
+document.getElementById("sousTitre").textContent =
+  `Département ${D.departement} · ${structures.length} structures · permis autorisés jusqu'au ${fmtDate(D.date_donnees)}`;
+document.getElementById("sources").innerHTML =
+  `Sources : base Sitadel du SDES (liste des permis de construire, data.gouv.fr), répertoire Sirène via l'API Recherche d'entreprises, nomenclatures INSEE. Page générée le ${fmtDate(D.genere_le)}.`;
+
+// ---------- panneau de filtres
+const compte = f => structures.filter(n => n.famille === f).length;
+document.getElementById("familles").innerHTML = ORDRE.filter(compte).map(f => `
+  <label class="ligne ${D.familles_cibles.includes(f) ? "cible" : ""}">
+    <input type="checkbox" value="${esc(f)}" ${familles.has(f) ? "checked" : ""}>
+    <span class="pastille" style="background:${COULEURS[f]}"></span>${esc(f)}<span class="n">${compte(f)}</span>
+  </label>`).join("");
+document.getElementById("signaux").innerHTML = Object.entries(SIGNAUX).map(([k, s]) => `
+  <label class="ligne"><input type="radio" name="signal" value="${k}" ${k === signal ? "checked" : ""}>
+    <span>${esc(s.titre)}${s.fragile ? ' <span class="fragile">FRAGILE</span>' : ""}</span>
+    <span class="n" data-signal="${k}"></span></label>
+  ${s.aide ? `<div class="aide">${esc(s.aide)}</div>` : ""}`).join("");
+document.getElementById("noms").innerHTML = structures
+  .map(n => `<option value="${esc(n.nom)}">${n.siren}</option>`).join("");
+
+// ---------- priorités de prospection (score calculé par graphe.py)
+const SCORE_MAX = D.parametres.score_max;
+const couleurScore = s => s >= 0.65 * SCORE_MAX ? "#b0532c" : s >= 0.4 * SCORE_MAX ? "#c98a3a" : "#9c8f82";
+const pastilleScore = s => `<span class="score" style="background:${couleurScore(s)}">${s}</span>`;
+const classees = structures.filter(n => n.score !== null)
+  .sort((a, b) => b.score - a.score || b.permis_dep - a.permis_dep);
+document.getElementById("priorites").innerHTML = classees.slice(0, 15).map(n => `
+  <li data-id="${n.id}" title="${esc(n.famille)}">${pastilleScore(n.score)}
+    <span class="pastille" style="background:${COULEURS[n.famille]}"></span><span class="nom">${esc(n.nom)}</span></li>`).join("");
+document.getElementById("bareme").innerHTML = D.bareme.map(b =>
+  `<li><span class="pts">${b.points > 0 ? "+" : ""}${b.points}</span><span>${esc(b.raison)}</span></li>`).join("");
+document.getElementById("priorites").addEventListener("click", e => {
+  const li = e.target.closest("li"); if (!li) return;
+  const n = parId.get(li.dataset.id);
+  rendreVisible(n);
+  if (mode === "hierarchie") { ouvrirFiche(n); transitionHier("avant", [n.famille, n.siren], null); }
+  else choisir(n.id);
+});
+
+// ---------- style des nœuds et des liens (vue réseau)
+const T = { texte: hexVar("--texte"), doux: hexVar("--doux"), fond: hexVar("--fond"), plein: hexVar("--plein"),
+            commune: hexVar("--commune"), communeBord: hexVar("--commune-bord"), lien: hexVar("--lien"), accent: hexVar("--accent") };
+const taille = n => 9 + 5.5 * Math.log2(1 + n.permis_dep);
+
+function styleNoeud(n, attenue = false) {
+  const a = attenue ? 0.12 : 1;
+  if (n.type === "commune") return {
+    id: n.id, label: n.nom, shape: "dot", size: 5 + 3 * Math.log2(1 + n.permis_dep), borderWidth: 1.5,
+    color: { background: alpha(T.commune, a), border: alpha(T.communeBord, a),
+             highlight: { background: T.commune, border: T.texte }, hover: { background: T.commune, border: T.texte } },
+    font: { color: alpha(T.doux, attenue ? 0.15 : 1), size: 11, face: "DM Sans", strokeWidth: 4, strokeColor: alpha(T.fond, a) },
+  };
+  const c = COULEURS[n.famille];
+  const marque = signal !== "tous" && n.signaux.includes(signal);
+  return {
+    id: n.id, label: court(n.nom), shape: "dot", size: taille(n), borderWidth: marque ? 4 : 2,
+    color: { background: alpha(c, a), border: alpha(marque ? T.texte : c, a),
+             highlight: { background: c, border: T.texte }, hover: { background: c, border: T.texte } },
+    font: { color: alpha(T.texte, attenue ? 0.15 : 1), size: 12.5, face: "DM Sans", strokeWidth: 4, strokeColor: alpha(T.fond, a) },
+    shadow: { enabled: !attenue, color: "rgba(60,40,20,.18)", size: 8, x: 0, y: 3 },
+  };
+}
+const styleLien = (l, i, attenue = false) => ({
+  id: i, from: l.from, to: l.to, width: 0.8 + 1.4 * Math.log2(1 + l.permis), title: `${l.permis} permis`,
+  color: { color: T.lien, opacity: attenue ? 0.06 : 0.45, highlight: T.accent, hover: T.accent },
+});
+
+const nodes = new vis.DataSet(D.noeuds.map(n => styleNoeud(n)));
+const edges = new vis.DataSet(D.liens.map((l, i) => styleLien(l, i)));
+
+const structureVisible = n => familles.has(n.famille) && (signal === "tous" || n.signaux.includes(signal));
+function calculerVisibles() {
+  const v = new Set();
+  for (const n of structures) if (structureVisible(n)) {
+    v.add(n.id);
+    for (const l of voisins.get(n.id) || []) v.add(l.to);
+  }
+  return v;
+}
+let visibles = calculerVisibles();
+const vueNoeuds = new vis.DataView(nodes, { filter: n => visibles.has(n.id) });
+const vueLiens = new vis.DataView(edges, { filter: e => visibles.has(e.from) && visibles.has(e.to) });
+
+// La physique ne sert qu'à placer les nœuds : elle est coupée dès que le graphe est posé.
+// Ensuite, déplacer un rond ne fait bouger que lui.
+const PHYSIQUE = {
+  enabled: true, solver: "forceAtlas2Based",
+  forceAtlas2Based: { gravitationalConstant: -55, centralGravity: 0.008, springLength: 95, springConstant: 0.05, damping: 0.9, avoidOverlap: 0.5 },
+  maxVelocity: 20, minVelocity: 1, stabilization: { enabled: true, iterations: 400, updateInterval: 50 },
+};
+const reseau = new vis.Network(document.getElementById("reseau"), { nodes: vueNoeuds, edges: vueLiens }, {
+  physics: PHYSIQUE,
+  interaction: { hover: true, tooltipDelay: 150, zoomSpeed: 0.35 },
+  edges: { smooth: { type: "continuous", roundness: 0.35 }, selectionWidth: 1.5, hoverWidth: 1 },
+  nodes: { borderWidth: 2 },
+});
+const figer = () => reseau.setOptions({ physics: { enabled: false } });
+reseau.on("stabilizationIterationsDone", () => { figer(); capturerBases(); });
+
+// ---------- respiration : une fois le graphe posé, chaque rond oscille de quelques pixels
+// autour de sa place, à son propre rythme. Rien ne dérive : la position de base ne change pas.
+const REDUIT = window.matchMedia("(prefers-reduced-motion: reduce)").matches;  // réglage d'accessibilité
+const AMPLITUDE = 2.5, MAX_NOEUDS_RESPIRATION = 800;
+let bases = null, pauseRespiration = true;
+const rythmes = new Map(D.noeuds.map(n => {
+  let h = 0; for (const c of n.id) h = (h * 31 + c.charCodeAt(0)) % 9973;
+  return [n.id, { phase: (h % 628) / 100, vitesse: (2 * Math.PI) / (7000 + (h % 400) * 10) }];  // période de 7 à 11 s
+}));
+function capturerBases() { bases = reseau.getPositions(vueNoeuds.getIds()); pauseRespiration = false; }
+function respirer() {
+  if (REDUIT || pauseRespiration || !bases || mode !== "reseau" || document.hidden) return;
+  const ids = Object.keys(bases);
+  if (ids.length > MAX_NOEUDS_RESPIRATION) return;  // très grand graphe : on économise la machine
+  const t = performance.now();
+  for (const id of ids) {
+    const b = bases[id], r = rythmes.get(id);
+    reseau.moveNode(id, b.x + AMPLITUDE * Math.sin(t * r.vitesse + r.phase), b.y + AMPLITUDE * Math.cos(t * r.vitesse * 0.8 + r.phase));
+  }
+  reseau.redraw();
+}
+setInterval(respirer, 50);  // 20 images par seconde suffisent pour un mouvement aussi lent
+reseau.on("dragStart", p => { if (p.nodes.length) pauseRespiration = true; });
+reseau.on("dragEnd", p => { if (p.nodes.length && bases) { Object.assign(bases, reseau.getPositions(p.nodes)); pauseRespiration = false; } });
+
+// cadre le graphe dans l'espace libre, à droite de la carte des filtres
+function cadrer(net) {
+  net.fit();
+  const marge = window.innerWidth > 900 ? document.getElementById("filtres").offsetWidth + 16 : 0;
+  const s = net.getScale() * 0.9;
+  const p = net.getViewPosition();
+  net.moveTo({ position: { x: p.x - marge / 2 / s, y: p.y }, scale: s, animation: { duration: 700, easingFunction: "easeInOutCubic" } });
+}
+reseau.once("stabilizationIterationsDone", () => cadrer(reseau));
+
+// ---------- mise en évidence du voisinage (le reste s'estompe)
+function eclairer(id) {
+  selection = id;
+  const proches = new Set([id]);
+  for (const l of voisins.get(id) || []) { proches.add(l.from); proches.add(l.to); }
+  nodes.update(D.noeuds.filter(n => visibles.has(n.id)).map(n => styleNoeud(n, id !== null && !proches.has(n.id))));
+  edges.update(D.liens.map((l, i) => [l, i]).filter(([l]) => visibles.has(l.from) && visibles.has(l.to))
+    .map(([l, i]) => styleLien(l, i, id !== null && l.from !== id && l.to !== id)));
+}
+
+function majCompteurs() {
+  const s = [...visibles].filter(id => id.startsWith("s")).length;
+  const c = [...visibles].filter(id => id.startsWith("c")).length;
+  if (mode === "reseau") document.getElementById("etat").textContent = `${s} structures · ${c} communes`;
+  document.querySelectorAll("#signaux [data-signal]").forEach(el => {
+    const k = el.dataset.signal;
+    el.textContent = k === "tous" ? "" : structures.filter(n => familles.has(n.famille) && n.signaux.includes(k)).length;
+  });
+}
+function rafraichir() {
+  visibles = calculerVisibles();
+  vueNoeuds.refresh(); vueLiens.refresh();
+  // les traits courbes coûtent cher : on les redresse quand le graphe devient très grand
+  reseau.setOptions({ edges: { smooth: vueLiens.length > 1500 ? false : { type: "continuous", roundness: 0.35 } },
+                      physics: PHYSIQUE });
+  eclairer(selection && visibles.has(selection) ? selection : null);
+  pauseRespiration = true;  // reprend quand le graphe est reposé (stabilizationIterationsDone)
+  reseau.stabilize(300);
+  majCompteurs();
+  if (mode === "hierarchie") dessinerHierarchie();
+}
+majCompteurs();
+
+// ---------- vue hiérarchie
+const hNoeuds = new vis.DataSet(), hLiens = new vis.DataSet();
+let hier = null;
+function creerHierarchie() {
+  hier = new vis.Network(document.getElementById("hierarchie"), { nodes: hNoeuds, edges: hLiens }, {
+    layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed", shakeTowards: "roots",
+              levelSeparation: 280, nodeSpacing: 58, treeSpacing: 60, parentCentralization: true } },
+    physics: { enabled: false, stabilization: { enabled: false, fit: false } },  // le cadrage est fait par cadrerHierarchie
+    interaction: { hover: true, dragNodes: false, zoomSpeed: 0.35, tooltipDelay: 150 },
+    edges: { smooth: { type: "cubicBezier", forceDirection: "horizontal", roundness: 0.5 },
+             color: { color: T.lien, opacity: 0.6, highlight: T.accent, hover: T.accent }, width: 1.2 },
+    nodes: { shape: "box", margin: { top: 8, bottom: 8, left: 12, right: 12 }, borderWidth: 1.5,
+             shapeProperties: { borderRadius: 10 }, font: { face: "DM Sans", size: 13, multi: "md" },
+             widthConstraint: { maximum: 230 } },
+  });
+  hier.on("click", p => { if (p.nodes.length) clicHierarchie(p.nodes[0]); });
+}
+
+const boite = (id, label, fond, texte, bord, extra = {}) => ({
+  id, label, color: { background: fond, border: bord, highlight: { background: fond, border: T.texte },
+                      hover: { background: fond, border: T.texte } },
+  font: { color: texte }, ...extra,
+});
+const visiblesHier = () => structures.filter(structureVisible);
+
+function dessinerHierarchie() {
+  const ns = [], ls = [];
+  const lien = (a, b, k) => ls.push({ from: a, to: b, width: k ? 0.8 + Math.log2(1 + k) : 1.2 });
+  const [fam, siren] = chemin;
+
+  if (!fam) {  // vue générale : département > familles
+    const liste = visiblesHier();
+    ns.push(boite("racine", `*Département ${D.departement}*\n${pluriel(liste.length, "structure")}`, T.texte, T.fond, T.texte));
+    for (const f of ORDRE) {
+      const s = liste.filter(n => n.famille === f);
+      if (!s.length) continue;
+      const p = s.reduce((t, n) => t + n.permis_dep, 0);
+      ns.push(boite("f:" + f, `*${f}*\n${pluriel(s.length, "structure")} · ${pluriel(p, "permis").replace("permiss", "permis")}`,
+                    COULEURS[f], "#fffaf3", COULEURS[f], { title: "Cliquez pour voir les structures" }));
+      lien("racine", "f:" + f, p);
+    }
+  } else if (!siren) {  // une famille > ses structures
+    // familles cibles : classées par score de priorité ; autres familles : par nombre de permis
+    const s = visiblesHier().filter(n => n.famille === fam)
+      .sort((a, b) => (b.score ?? -99) - (a.score ?? -99) || b.permis_dep - a.permis_dep);
+    ns.push(boite("f:" + fam, `*${fam}*\n${pluriel(s.length, "structure")}`, COULEURS[fam], "#fffaf3", COULEURS[fam]));
+    for (const n of s.slice(0, MAX_STRUCTURES_HIERARCHIE)) {
+      const sig = signal !== "tous" && n.signaux.includes(signal);
+      ns.push(boite(n.id, `*${court(n.nom, 30)}*\n${n.score !== null ? `score ${n.score} · ` : ""}${n.permis_dep} permis${n.signaux.length ? " · " + n.signaux.length + " signal" + (n.signaux.length > 1 ? "aux" : "") : ""}`,
+                    T.plein, T.texte, COULEURS[fam], { borderWidth: sig ? 3 : 1.5, title: "Cliquez pour voir ses constructions" }));
+      lien("f:" + fam, n.id, n.permis_dep);
+    }
+    if (s.length > MAX_STRUCTURES_HIERARCHIE) {
+      ns.push(boite("plus", `${s.length - MAX_STRUCTURES_HIERARCHIE} autres structures\nutilisez la recherche ou un signal`,
+                    T.fond, T.doux, T.communeBord, { borderWidth: 1 }));
+      lien("f:" + fam, "plus");
+    }
+  } else {  // une structure > ses communes > ses permis
+    const n = parSiren.get(siren);
+    ns.push(boite(n.id, `*${court(n.nom, 30)}*\n${n.famille}`, COULEURS[n.famille], "#fffaf3", COULEURS[n.famille]));
+    const parCommune = new Map();
+    for (const p of n.permis) {
+      if (!parCommune.has(p.commune)) parCommune.set(p.commune, []);
+      parCommune.get(p.commune).push(p);
+    }
+    for (const [commune, liste] of parCommune) {
+      const idc = "hc:" + commune;
+      ns.push(boite(idc, `*${commune}*\n${pluriel(liste.length, "permis").replace("permiss", "permis")}`, T.commune, T.texte, T.communeBord));
+      lien(n.id, idc, liste.length);
+      for (const p of liste) {
+        const detail = p.fichier === "logements" ? pluriel(p.logements, "logement") + (p.sociaux ? ` dont ${p.sociaux} sociaux` : "") : "locaux";
+        // un même numéro peut figurer dans le fichier logements ET dans le fichier locaux : l'identifiant inclut le fichier
+        ns.push(boite(`p:${p.fichier}:${p.num}`, `*PC ${p.num}*\n${p.date.slice(0, 4)} · ${p.etat} · ${detail}`,
+                      T.plein, T.texte, p.medico || p.attente ? T.accent : T.communeBord,
+                      { borderWidth: p.medico || p.attente ? 2.5 : 1, font: { color: T.texte, size: 12 },
+                        title: [p.projet, p.medico && "projet médico-social", p.attente && "en attente (fragile)"].filter(Boolean).join(" · ") || "Cliquez pour le détail" }));
+        lien(idc, `p:${p.fichier}:${p.num}`);
+      }
+    }
+  }
+  hNoeuds.clear(); hLiens.clear();
+  hNoeuds.add(ns); hLiens.add(ls);
+  // la bibliothèque recadre elle-même après avoir placé un grand arbre : on cadre juste après elle
+  setTimeout(cadrerHierarchie, 250);
+  majAriane();
+  document.getElementById("etat").textContent = !fam ? "Vue générale par famille"
+    : !siren ? (D.familles_cibles.includes(fam) ? "Structures classées par score de priorité" : "Structures classées par nombre de permis") : "Communes et permis de la structure";
+}
+
+// Si tout faire tenir à l'écran rend le texte illisible, on garde un zoom lisible et on se cale en haut de l'arbre.
+function cadrerHierarchie() {
+  hier.fit();
+  if (hier.getScale() >= 0.75) return cadrer(hier);
+  // la racine est centrée sur toute la hauteur de l'arbre, donc hors de l'écran : on la remonte en haut
+  const racine = hNoeuds.getIds()[0];
+  const positions = hier.getPositions();
+  const autres = Object.entries(positions).filter(([id]) => id !== racine).map(([, p]) => p);
+  hier.moveNode(racine, positions[racine].x, Math.min(...autres.map(p => p.y)));
+  const pos = Object.values(hier.getPositions());
+  const minX = Math.min(...pos.map(p => p.x)), minY = Math.min(...pos.map(p => p.y));
+  const marge = window.innerWidth > 900 ? document.getElementById("filtres").offsetWidth + 16 : 0;
+  const s = 0.85;
+  // la racine de l'arbre se place juste à droite des filtres, en haut de l'écran.
+  // Sans animation : la bibliothèque émet un « resize » juste après, qui interromprait un zoom animé.
+  hier.moveTo({ position: { x: minX + (window.innerWidth / 2 - marge - 110) / s, y: minY + (window.innerHeight / 2 - 170) / s }, scale: s });
+}
+
+function majAriane() {
+  const [fam, siren] = chemin;
+  const morceaux = [`<button data-niveau="0">Vue générale</button>`];
+  if (fam) morceaux.push(siren ? `<button data-niveau="1">${esc(fam)}</button>` : `<span>${esc(fam)}</span>`);
+  if (siren) morceaux.push(`<span>${esc(court(parSiren.get(siren).nom, 40))}</span>`);
+  const nav = document.getElementById("ariane");
+  nav.innerHTML = morceaux.join('<span class="sep">›</span>');
+  nav.querySelectorAll("button").forEach(b => b.onclick = () => { fermerFiche(); transitionHier("arriere", chemin.slice(0, +b.dataset.niveau), null); });
+}
+
+// Passage d'un niveau à l'autre : léger zoom vers la carte cliquée, l'arbre sort d'un côté en s'effaçant,
+// le nouvel arbre est dessiné et cadré pendant qu'il est invisible, puis il entre par l'autre côté.
+// « avant » = on descend (sortie à gauche, entrée par la droite), « arriere » = on remonte.
+let enTransition = false;
+function transitionHier(sens, nouveauChemin, idClique) {
+  if (enTransition) return;
+  const el = document.getElementById("hierarchie");
+  const appliquer = () => { chemin = nouveauChemin; dessinerHierarchie(); };
+  if (REDUIT) return appliquer();
+  enTransition = true;
+  if (idClique) hier.focus(idClique, { scale: hier.getScale() * 1.2, animation: { duration: 300, easingFunction: "easeInQuad" } });
+  el.classList.add(sens === "avant" ? "vers-gauche" : "vers-droite");
+  setTimeout(() => {
+    appliquer();
+    setTimeout(() => {  // cadrerHierarchie a tourné (250 ms) : on place le nouvel arbre hors champ, sans transition
+      el.classList.add("sans-transition");
+      el.classList.remove("vers-gauche", "vers-droite");
+      el.classList.add(sens === "avant" ? "vers-droite" : "vers-gauche");
+      void el.offsetWidth;  // force le navigateur à prendre en compte cette position de départ
+      el.classList.remove("sans-transition", "vers-gauche", "vers-droite");
+      setTimeout(() => { enTransition = false; }, 550);
+    }, 290);
+  }, 320);
+}
+
+function clicHierarchie(id) {
+  if (id === "racine") { if (chemin.length) { fermerFiche(); transitionHier("arriere", [], null); } }
+  else if (id.startsWith("f:")) {
+    if (chemin.length === 1) return;  // c'est déjà la famille affichée
+    fermerFiche(); transitionHier("avant", [id.slice(2)], id);
+  }
+  else if (id.startsWith("s")) {
+    const n = parId.get(id);
+    ouvrirFiche(n);
+    if (chemin[1] !== n.siren) transitionHier("avant", [n.famille, n.siren], id);
+  }
+  else if (id.startsWith("p:")) {
+    const n = parSiren.get(chemin[1]);
+    const [, fichier, num] = id.split(":");
+    const p = n.permis.find(x => x.num === num && x.fichier === fichier);
+    fichePermis(p, n);
+  }
+  // communes et nœud « autres » : rien à ouvrir
+}
+
+function basculer(nouveau, nouveauChemin) {
+  mode = nouveau;
+  document.getElementById("btnReseau").classList.toggle("actif", mode === "reseau");
+  document.getElementById("btnHierarchie").classList.toggle("actif", mode === "hierarchie");
+  document.getElementById("reseau").classList.toggle("cachee", mode !== "reseau");
+  document.getElementById("hierarchie").classList.toggle("cachee", mode !== "hierarchie");
+  document.getElementById("ariane").classList.toggle("visible", mode === "hierarchie");
+  if (mode === "hierarchie") {
+    if (nouveauChemin) chemin = nouveauChemin;
+    // les cases sont dimensionnées d'après la police : on attend qu'elle soit chargée
+    document.fonts.ready.then(() => { if (!hier) creerHierarchie(); dessinerHierarchie(); });
+  } else {
+    majCompteurs();
+  }
+}
+document.getElementById("btnReseau").onclick = () => { fermerFiche(); basculer("reseau"); };
+document.getElementById("btnHierarchie").onclick = () => { fermerFiche(); basculer("hierarchie"); };
+
+// ---------- évènements des filtres
+document.getElementById("familles").addEventListener("change", e => {
+  e.target.checked ? familles.add(e.target.value) : familles.delete(e.target.value);
+  if (chemin[0] && !familles.has(chemin[0])) chemin = [];
+  rafraichir();
+});
+document.getElementById("signaux").addEventListener("change", e => {
+  signal = e.target.value;
+  if (chemin[1] && !structureVisible(parSiren.get(chemin[1]))) chemin = chemin.slice(0, 1);
+  rafraichir();
+});
+function cocherFamilles(liste) {
+  familles.clear(); liste.forEach(f => familles.add(f));
+  document.querySelectorAll("#familles input").forEach(i => i.checked = familles.has(i.value));
+  if (chemin[0] && !familles.has(chemin[0])) chemin = [];
+  rafraichir();
+}
+document.getElementById("btnCibles").onclick = () => cocherFamilles(D.familles_cibles);
+document.getElementById("btnTout").onclick = () => cocherFamilles(ORDRE);
+document.getElementById("recherche").addEventListener("change", e => {
+  const q = e.target.value.trim().toUpperCase();
+  if (!q) return;
+  const n = structures.find(s => s.nom.toUpperCase() === q || s.siren === q)
+         || structures.find(s => s.nom.toUpperCase().includes(q));
+  if (!n) return;
+  rendreVisible(n);
+  if (mode === "hierarchie") { ouvrirFiche(n); transitionHier("avant", [n.famille, n.siren], null); }
+  else choisir(n.id);
+});
+
+// ---------- fiche détaillée
+const fiche = document.getElementById("fiche");
+function fermerFiche() { fiche.classList.remove("ouverte"); }
+function fermer() {
+  fermerFiche();
+  if (mode === "reseau") { reseau.unselectAll(); eclairer(null); }
+  history.replaceState(null, "", location.pathname);
+}
+function rendreVisible(n) {
+  if (structureVisible(n)) return;
+  familles.add(n.famille); signal = "tous";
+  document.querySelectorAll("#familles input").forEach(i => i.checked = familles.has(i.value));
+  document.querySelector('#signaux input[value="tous"]').checked = true;
+  rafraichir();
+}
+function ouvrirFiche(n) {
+  n.type === "structure" ? ficheStructure(n) : ficheCommune(n);
+  fiche.scrollTop = 0;
+  fiche.classList.add("ouverte");
+  history.replaceState(null, "", "#" + (n.siren || n.code));  // lien partageable vers cette fiche
+}
+function choisir(id) {
+  const n = parId.get(id);
+  if (n.type === "structure") rendreVisible(n);
+  reseau.selectNodes([id]);
+  eclairer(id);
+  reseau.focus(id, { scale: Math.max(reseau.getScale(), 0.9), offset: { x: -150, y: 0 },
+                     animation: { duration: 700, easingFunction: "easeInOutCubic" } });
+  ouvrirFiche(n);
+}
+reseau.on("click", p => p.nodes.length ? choisir(p.nodes[0]) : fermer());
+document.addEventListener("keydown", e => { if (e.key === "Escape") fermer(); });
+
+const boutonFermer = '<button class="fermer" aria-label="Fermer la fiche" onclick="fermer()">×</button>';
+
+function blocPermis(p) {
+  return `
+    <div class="permis">
+      <div class="titre"><a href="${esc(p.source)}" target="_blank" rel="noopener">PC ${esc(p.num)}</a><span class="meta">${fmtDate(p.date)}</span></div>
+      <div>${esc(p.commune)} · ${esc(p.etat)}${p.ouverture ? ` (chantier ouvert le ${fmtDate(p.ouverture)})` : ""}</div>
+      <div class="meta">${p.fichier === "logements" ? `${pluriel(p.logements, "logement")}${p.sociaux ? `, dont ${p.sociaux} sociaux` : ""}` : "locaux non résidentiels"}${p.projet ? ` · ${esc(p.projet)}` : ""}</div>
+      ${p.medico ? '<span class="puce">projet médico-social</span>' : ""}${p.attente ? '<span class="puce">en attente · fragile</span>' : ""}
+    </div>`;
+}
+
+function ficheStructure(n) {
+  const puces = n.signaux.map(s => `<span class="puce">${esc(SIGNAUX[s].titre)}${SIGNAUX[s].fragile ? " · fragile" : ""}</span>`).join("");
+  fiche.innerHTML = `${boutonFermer}
+    <h3>${esc(n.nom)}</h3>
+    <span class="puce famille" style="background:${COULEURS[n.famille]}">${esc(n.famille)}</span>${puces}
+    <dl>
+      <dt>SIREN</dt><dd><a href="${esc(n.source)}" target="_blank" rel="noopener">${n.siren}</a> · fiche Sirène</dd>
+      <dt>Forme juridique</dt><dd>${esc(n.cj) || "inconnue"}</dd>
+      <dt>Activité</dt><dd>${esc(n.ape) || "inconnue"}</dd>
+      <dt>Classement</dt><dd>règle ${esc(n.regle)}, confiance ${esc(n.confiance)}</dd>
+      <dt>Permis</dt><dd>${n.permis_dep} dans le ${esc(D.departement)}, ${n.permis_france} en France (${pluriel(n.departements, "département")})</dd>
+      <dt>Premier permis</dt><dd>${fmtDate(n.premier_permis_france) || "inconnu"} (France, depuis 2013)</dd>
+    </dl>
+    <div class="note">${esc(n.justification)}</div>
+    ${n.score !== null ? `
+      <h2>Score de priorité</h2>
+      <div class="bloc-score"><span class="grand">${n.score}</span><span class="meta">sur ${SCORE_MAX} · rang ${classees.indexOf(n) + 1} sur ${classees.length} structures cibles</span></div>
+      <ul class="raisons">${n.raisons.map(r => `<li><span class="pts">${r.points > 0 ? "+" : ""}${r.points}</span><span>${esc(r.raison)}</span></li>`).join("")}</ul>`
+      : `<div class="note">Hors familles cibles de Buddimm : pas de score de priorité.</div>`}
+    ${mode === "reseau" ? `<div class="boutons"><button id="versHier">Voir ses constructions en hiérarchie</button></div>` : ""}
+    <h2>Permis de construire (${n.permis.length})</h2>${n.permis.map(blocPermis).join("")}`;
+  const b = document.getElementById("versHier");
+  if (b) b.onclick = () => basculer("hierarchie", [n.famille, n.siren]);
+}
+
+function fichePermis(p, n) {
+  fiche.innerHTML = `${boutonFermer}
+    <h3>Permis ${esc(p.num)}</h3>
+    <span class="puce famille" style="background:${COULEURS[n.famille]}">${esc(n.famille)}</span>
+    <div class="meta" style="margin:8px 0 4px">Demandeur : <button class="lienstruct" id="versStruct">${esc(n.nom)}</button></div>
+    ${blocPermis(p)}
+    <div class="note">Le lien du numéro ouvre la ligne officielle de ce permis dans la base Sitadel du SDES.</div>`;
+  document.getElementById("versStruct").onclick = () => ouvrirFiche(n);
+  fiche.scrollTop = 0;
+  fiche.classList.add("ouverte");
+}
+
+function ficheCommune(n) {
+  const liens = (voisins.get(n.id) || []).map(l => ({ s: parId.get(l.from), k: l.permis }));
+  const groupes = ORDRE.map(f => [f, liens.filter(x => x.s.famille === f).sort((a, b) => b.k - a.k)]).filter(([, l]) => l.length);
+  fiche.innerHTML = `${boutonFermer}
+    <h3>${esc(n.nom)}</h3><div class="meta">Commune INSEE ${esc(n.code)} · ${n.permis_dep} permis de personnes morales</div>
+    ${groupes.map(([f, l]) => `
+      <h2><span class="pastille" style="display:inline-block;background:${COULEURS[f]};margin-right:6px"></span>${esc(f)} (${l.length})</h2>
+      ${l.map(x => `<div><button class="lienstruct" data-id="${x.s.id}">${esc(x.s.nom)}</button> <span class="meta">· ${x.k} permis</span></div>`).join("")}`).join("")}`;
+  fiche.querySelectorAll(".lienstruct").forEach(b => b.onclick = () => choisir(b.dataset.id));
+}
+
+// ouverture directe : graphe_XX.html#SIREN ou #code_commune, et #hierarchie pour la vue arbre
+if (location.hash) {
+  const cle = decodeURIComponent(location.hash.slice(1));
+  if (cle.startsWith("hierarchie")) {  // #hierarchie, #hierarchie/<famille> ou #hierarchie/<SIREN>
+    const suite = cle.split("/")[1] || "";
+    const n = parSiren.get(suite);
+    if (n) { rendreVisible(n); basculer("hierarchie", [n.famille, n.siren]); ouvrirFiche(n); }
+    else if (COULEURS[suite]) { if (!familles.has(suite)) cocherFamilles([...familles, suite]); basculer("hierarchie", [suite]); }
+    else basculer("hierarchie");
+  } else {
+    const n = parSiren.get(cle) || parId.get("c" + cle);
+    if (n) reseau.once("stabilizationIterationsDone", () => setTimeout(() => choisir(n.id), 750));
+  }
+}
+</script>
+</body>
+</html>
