@@ -1,8 +1,8 @@
-# Inspecteur Sitadel
+﻿# Inspecteur Sitadel
 
 Pour chaque permis de construire d'un département, l'outil dit à quelle famille appartient le demandeur (bailleur social, structure ESS médico-sociale, collectivité, promoteur, SCI...) et fait ressortir les porteurs de projet qui ressemblent aux clients de Buddimm, direction immobilière externalisée des associations médico-sociales, des structures de l'ESS et des bailleurs sociaux.
 
-**Démo : __LIEN_DEMO__** (Yvelines, 7 608 permis, 3 957 demandeurs)
+**Démo : [hamzaoukach.github.io/InspecteurSitadel](https://hamzaoukach.github.io/InspecteurSitadel/)** (Yvelines, 7 608 permis, 3 957 demandeurs)
 
 Cas pratique réalisé pour un stage « IA agentique et développement web ». Périmètre : permis de construire (PC) de logements et de locaux, demandeurs personnes morales, département des Yvelines (78) ; le département est un paramètre.
 
