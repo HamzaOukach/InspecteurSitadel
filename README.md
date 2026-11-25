@@ -1,4 +1,4 @@
-﻿# Inspecteur Sitadel
+﻿# 🕵️ Inspecteur Sitadel
 
 Pour chaque permis de construire d'un département, l'outil dit à quelle famille appartient le demandeur (bailleur social, structure ESS médico-sociale, collectivité, promoteur, SCI...) et fait ressortir les porteurs de projet qui correspondent au profil des clients visés par Buddimm, direction immobilière externalisée : associations médico-sociales, structures de l'ESS et bailleurs sociaux, souvent sans équipe immobilière interne.
 
