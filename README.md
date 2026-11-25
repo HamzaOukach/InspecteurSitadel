@@ -1,6 +1,6 @@
 ﻿# Inspecteur Sitadel
 
-Pour chaque permis de construire d'un département, l'outil dit à quelle famille appartient le demandeur (bailleur social, structure ESS médico-sociale, collectivité, promoteur, SCI...) et fait ressortir les porteurs de projet qui ressemblent aux clients de Buddimm, direction immobilière externalisée des associations médico-sociales, des structures de l'ESS et des bailleurs sociaux.
+Pour chaque permis de construire d'un département, l'outil dit à quelle famille appartient le demandeur (bailleur social, structure ESS médico-sociale, collectivité, promoteur, SCI...) et fait ressortir les porteurs de projet qui correspondent au profil des clients visés par Buddimm, direction immobilière externalisée : associations médico-sociales, structures de l'ESS et bailleurs sociaux, souvent sans équipe immobilière interne.
 
 **Démo : [hamzaoukach.github.io/InspecteurSitadel](https://hamzaoukach.github.io/InspecteurSitadel/)** (Yvelines, 7 608 permis, 3 957 demandeurs)
 ## Ce que fait l'outil
@@ -47,14 +47,6 @@ Indices décisifs au delà de la forme juridique :
 - **Inscription au FINESS** : repère les associations médico-sociales dont le code d'activité est trompeur.
 
 Signaux de prospection : construit régulièrement, nouvel entrant (premier permis en France depuis moins de deux ans), projet médico-social, permis en attente (fragile), promoteur déclarant des logements sociaux (fragile). Le score de priorité additionne des points explicites ; le barème est en tête de `graphe.py`.
-
-## Limites
-
-- Environ 15 % des ouvertures de chantier ne remontent jamais à Sitadel : un permis « en attente » n'est pas forcément bloqué.
-- Le nombre de logements sociaux est « insuffisamment renseigné » selon le dictionnaire du SDES.
-- Le porteur réel des SCI et des sociétés de programme reste inconnu.
-- L'indicateur ESS de Sirène est déclaratif.
-- Le score est un barème choisi à la main, à valider avec Buddimm ; ce n'est pas une prédiction.
 
 ## Sources
 
